@@ -1,0 +1,11 @@
+Serie de comandos para criar o projeto
+
+npx create-react-app my-todolist --template typescript
+
+npm install @mui/material @emotion/react @emotion/styled
+
+npm install @mui/icons-material
+
+npm install styled-components
+
+npm install firebase@10.8.0

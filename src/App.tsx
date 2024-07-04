@@ -1,131 +1,78 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
-  TextField,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  Divider,
   AppBar,
   Toolbar,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
+  Grid,
+  CssBaseline,
 } from "@mui/material";
-import { Add, Edit, Delete } from "@mui/icons-material";
 import { styled } from "@mui/system";
+import { translations } from "./data/Language/translations";
+import { useLanguage } from "./data/Language";
+import Calendar from "./components/Calendar";
+import ToDo from "./components/ToDo";
+import Cronometer from "./components/Cronometer";
+import LanguageSwitcher from "./components/languageSwitcher";
+import ThemeSelector from "./components/ThemeSelector";
+import { createTheme, Theme, ThemeProvider } from "@mui/material/styles";
+import { useAuth } from "./data/ThemeProvider";
+import { blueTheme, emptyTheme, redTheme } from "./data/ThemeProvider/allThemes";
 
 const AppContainer = styled(Container)({
   marginTop: "2rem",
 });
 
-const FormContainer = styled("div")({
-  display: "flex",
-  alignItems: "center",
-  marginBottom: "1rem",
-});
-
-const StyledTextField = styled(TextField)({
-  marginRight: "1rem",
-  flex: 1,
-});
-
-const LanguageSelector = styled(Select)({
-  marginLeft: "auto",
-});
-
 const App: React.FC = () => {
-  const [tasks, setTasks] = useState<string[]>([]);
-  const [currentTask, setCurrentTask] = useState("");
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [language, setLanguage] = useState("en");
+  const { currentTheme } = useAuth();
+  const [actualTheme, setActualTheme] = useState<Theme>(emptyTheme);
+  const { language } = useLanguage();
 
-  const handleAddTask = () => {
-    if (currentTask.trim()) {
-      if (editIndex !== null) {
-        const updatedTasks = [...tasks];
-        updatedTasks[editIndex] = currentTask;
-        setTasks(updatedTasks);
-        setEditIndex(null);
-      } else {
-        setTasks([...tasks, currentTask]);
-      }
-      setCurrentTask("");
+  useEffect(() => {
+    console.log(currentTheme);
+    switch (currentTheme) {
+      case 'blue':
+        setActualTheme(blueTheme);
+        break;
+      case 'red':
+        setActualTheme(redTheme);
+        break;
+      default:
+        setActualTheme(emptyTheme);
+        break;
     }
-  };
-
-  const handleEditTask = (index: number) => {
-    setCurrentTask(tasks[index]);
-    setEditIndex(index);
-  };
-
-  const handleDeleteTask = (index: number) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  };
-
-  //! Copiar language selector do languageswitcher do portifolio
+  }, [currentTheme]);
 
   return (
-    <AppContainer maxWidth="sm">
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6">To-Do List</Typography>
-          
-        </Toolbar>
-      </AppBar>
-      <Typography variant="h4" gutterBottom>
-        {language === "en" && "My To-Do List"}
-        {language === "es" && "Mi Lista de Tareas"}
-        {language === "pt" && "Minha Lista de Tarefas"}
-      </Typography>
-      <FormContainer>
-        <StyledTextField
-          label={
-            language === "en" ? "Task" : language === "es" ? "Tarea" : "Tarefa"
-          }
-          variant="outlined"
-          value={currentTask}
-          onChange={(e) => setCurrentTask(e.target.value)}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddTask}
-          startIcon={editIndex !== null ? <Edit /> : <Add />}
-        >
-          {editIndex !== null
-            ? language === "en"
-              ? "Update"
-              : language === "es"
-              ? "Actualizar"
-              : "Atualizar"
-            : language === "en"
-            ? "Add"
-            : language === "es"
-            ? "Agregar"
-            : "Adicionar"}
-        </Button>
-      </FormContainer>
-      <List>
-        {tasks.map((task, index) => (
-          <React.Fragment key={index}>
-            <ListItem>
-              <ListItemText primary={task} />
-              <IconButton edge="end" onClick={() => handleEditTask(index)}>
-                <Edit />
-              </IconButton>
-              <IconButton edge="end" onClick={() => handleDeleteTask(index)}>
-                <Delete />
-              </IconButton>
-            </ListItem>
-            <Divider />
-          </React.Fragment>
-        ))}
-      </List>
-    </AppContainer>
+    <ThemeProvider theme={actualTheme}>
+      <CssBaseline />
+      <body>
+        <AppContainer maxWidth="lg">
+          <AppBar position="static">
+            <Toolbar sx={{ justifyContent: "space-between" }}>
+              <Typography variant="h6">
+                {translations[language].header.text1}
+              </Typography>
+              <div>
+                <LanguageSwitcher />
+                <ThemeSelector />
+              </div>
+            </Toolbar>
+          </AppBar>
+          <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
+            <Grid item xs={12} sm={4}>
+              <Calendar />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <ToDo />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Cronometer />
+            </Grid>
+          </Grid>
+        </AppContainer>
+      </body>
+    </ThemeProvider>
   );
 };
 

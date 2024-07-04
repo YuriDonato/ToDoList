@@ -9,3 +9,13 @@ npm install @mui/icons-material
 npm install styled-components
 
 npm install firebase@10.8.0
+
+Para o calendario:
+npm install @mui/x-date-pickers
+
+
+para adicionar:
+no meio é a tarefas, 
+lado esquerdo tem que ter um calendario e no 
+lado direito um cronometro
+modo de temas personalizados

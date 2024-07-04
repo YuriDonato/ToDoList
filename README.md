@@ -1,7 +1,4 @@
----
-
 # To-Do List
-
 This project is part of a series of 30 projects where I challenge myself to build a new project each day to improve my skills in React. This is the first project in the series: a simple To-Do List application built with React, TypeScript, Material-UI, and Firebase.
 
 ## Table of Contents
@@ -33,5 +30,3 @@ The To-Do List application allows users to add, edit, and delete tasks. This pro
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
